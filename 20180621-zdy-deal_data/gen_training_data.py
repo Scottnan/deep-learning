@@ -1,3 +1,5 @@
+import sys
+import os
 import multiprocessing as mp
 import numpy as np
 from .gen_daily_care import *
@@ -58,7 +60,7 @@ def get_period_dates_alphas(period_dates, alpha_npz_dir):
 # get alphas based on date specifed
 def get_alphas(date_alphas, stock):
     alphas = np.zeros((156))
-    sorted_date_alphas = sorted(date_alphas.items(), key=lambda item:item[0])
+    sorted_date_alphas = sorted(date_alphas.items(), key=lambda item: item[0])
     raw_NA, imputed_NA = 0, 0
     for ind, stock_imputed in enumerate(sorted_date_alphas):
         if stock_imputed == 'NA':
@@ -91,7 +93,7 @@ def get_alpha_feature(dates_list, alpha_npz_dir, lasting_days, save_npz_dir):
         # print 'len of common_stocks \t' + str(len(common_stocks))
         for stock in common_stocks:
             stock_train_data, useful = np.zeros((lasting_days, 156)), True
-            ratio  = DAILY_CARE_RATIO[date][stock]
+            ratio = DAILY_CARE_RATIO[date][stock]
             label = get_label(ratio['yield_rank'])
             if label == "None":
                 continue
@@ -106,7 +108,8 @@ def get_alpha_feature(dates_list, alpha_npz_dir, lasting_days, save_npz_dir):
                 # save one slice
                 stock_train_data[ind] = alpha_feature
             if useful:
-                stock_train_dict = {"data":stock_train_data, "label":label, "ratio":ratio['yield_rank'], "value":ratio['yield_value']}
+                stock_train_dict = {"data": stock_train_data, "label": label, "ratio": ratio['yield_rank'], 
+                                    "value": ratio['yield_value']}
 
                 npz_path = os.path.join(save_npz_dir, date, '{}.npz'.format(stock))
                 np.savez(npz_path, info=stock_train_dict)

@@ -1,9 +1,11 @@
+from __future__ import print_function
 import sys
 import os
 import argparse
 import pickle
 from datetime import *
 import pdb
+
 
 ONEDAY=timedelta(days=1)
 
@@ -60,8 +62,8 @@ def get_daily_care_ratio(daily_care, daily_close):
         stocks_care_len = len(stocks_care)
         yield_rate = {}
         for stock in stocks_care:
-            yield_rate[stock] = (float(daily_close[date][stock]) - float(daily_close \
-            [former_trading_date][stock]))/float(daily_close[former_trading_date][stock])
+            yield_rate[stock] = (float(daily_close[date][stock]) - float(daily_close[former_trading_date][stock]))/\
+                                float(daily_close[former_trading_date][stock])
         #yield_rate: large -> small
         sorted_yield_rate = sorted(yield_rate.items(), key=lambda item:item[1], reverse=True)
         for ind, content in enumerate(sorted_yield_rate):

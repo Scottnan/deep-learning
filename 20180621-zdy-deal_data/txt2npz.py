@@ -1,16 +1,14 @@
-import sys
 import os
 import argparse
-import pdb
 import glob
 import pickle
 import multiprocessing as mp
-import Queue
-import threading
 import numpy as np
 '''
 generate time-piece pkl, every pkl contain all alpha
 '''
+
+
 def get_daily_alpha(filename):
     fid = open(filename)
     lines = fid.readlines()
@@ -24,10 +22,11 @@ def get_daily_alpha(filename):
         daily_alpha[inner_code] = [raw_alpha, alpha]
     return daily_alpha
 
+
 def process_date(convert_dir, npzs_path, date_list, filtered_alphas):
     for date in date_list:
         daily_alphas = {}
-        print date
+        print(date)
         key_search = date.replace('-','')
         for alpha_index in filtered_alphas:
             filename = alpha_index + '_' + key_search + '_' + key_search + '.txt'
@@ -40,9 +39,10 @@ def process_date(convert_dir, npzs_path, date_list, filtered_alphas):
         npz_path = os.path.join(npzs_path, date + '.npz')
         np.savez(npz_path, info=daily_alphas)
 
+
 def get_alphas_dict(convert_dir):
     alphas_list = os.listdir(convert_dir)
-    print alphas_list
+    print(alphas_list)
     alphas_dict = {}
     for alpha in alphas_list:
         alpha_dir = os.path.join(convert_dir, alpha)
@@ -50,8 +50,9 @@ def get_alphas_dict(convert_dir):
             continue
         raw_NA_ratio, imputed_NA_ratio = get_NA_ratio(alpha_dir)
         alphas_dict[alpha] = {'raw':raw_NA_ratio, 'imputed':imputed_NA_ratio}
-        print alpha + '\t' + str(raw_NA_ratio) + '\t' + str(imputed_NA_ratio)
+        print(alpha + '\t' + str(raw_NA_ratio) + '\t' + str(imputed_NA_ratio))
     return alphas_dict
+
 
 def get_NA_ratio(alpha_dir):
     regular = os.path.join(alpha_dir, '*.txt')
@@ -68,6 +69,7 @@ def get_NA_ratio(alpha_dir):
                 raw_NA += 1
     return float(raw_NA)/total, float(imputed_NA)/total
 
+
 def get_filtered_alphas(alphas_dict, raw_threshold, imputed_threshold):
     filtered_alphas = []
     for alpha in alphas_dict.keys():
@@ -75,10 +77,11 @@ def get_filtered_alphas(alphas_dict, raw_threshold, imputed_threshold):
             filtered_alphas.append(alpha)
     return filtered_alphas
 
+
 if __name__ == '__main__':
     p = argparse.ArgumentParser(
-    description='generate txt to daily_pkl data',
-    formatter_class=argparse.RawDescriptionHelpFormatter)
+        description='generate txt to daily_pkl data',
+        formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument('--convert_dir')
     p.add_argument('--npzs_path')
     p.add_argument('--raw_threshold', type=float, default=0.1)
@@ -91,9 +94,9 @@ if __name__ == '__main__':
     alphas_care = open('alpha_care.pkl')
     alphas_dict = pickle.load(alphas_care)
     alphas_care.close()
-    print 'alpha_care.pkl loaded'
+    print('alpha_care.pkl loaded')
     filtered_alphas = get_filtered_alphas(alphas_dict, args.raw_threshold, args.imputed_threshold)
-    print 'pick out {} alphas'.format(len(filtered_alphas))
+    print('pick out {} alphas'.format(len(filtered_alphas)))
     dates = pickle.load(open('../quant_impl/dates.pkl'))
     print(len(dates))
     dates_list = [[] for _ in range(min(len(dates), args.num_processes))]
@@ -103,7 +106,7 @@ if __name__ == '__main__':
     processes = []
     for idx in range(len(dates_list)):
         p = mp.Process(target=process_date,
-                args=(args.convert_dir, args.npzs_path, dates_list[idx], filtered_alphas))
+                       args=(args.convert_dir, args.npzs_path, dates_list[idx], filtered_alphas))
         p.daemon = True
         p.start()
         processes.append(p)

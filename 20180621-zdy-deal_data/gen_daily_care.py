@@ -3,7 +3,7 @@ import pickle
 from datetime import *
 
 
-ONEDAY=timedelta(days=1)
+ONEDAY = timedelta(days=1)
 
 
 def parse_ymd(ymd):
@@ -22,7 +22,7 @@ def get_former_trading_date(dates, date):
 
 def get_daily_care(filename):
     lines = open(filename).readlines()
-    daily_care  = {}
+    daily_care = {}
     for line in lines:
         segs = line.strip().split(' ')
         if len(segs) < 3:
@@ -36,7 +36,7 @@ def get_daily_care(filename):
 
 def get_daily_close(filename):
     lines = open(filename).readlines()
-    daily_close  = {}
+    daily_close = {}
     for line in lines:
         segs = line.strip().split(' ')
         if len(segs) < 7:
@@ -52,7 +52,7 @@ def get_daily_care_ratio(daily_care, daily_close):
     dates = daily_care.keys()
     daily_care_ratio = {}
     for date in dates:
-        #the date start of close data
+        # the date start of close data
         if date == '2005-01-04':
             continue
         if date not in daily_care_ratio.keys():

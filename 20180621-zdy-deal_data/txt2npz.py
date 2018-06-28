@@ -13,7 +13,7 @@ def get_daily_alpha(filename):
     fid = open(filename)
     lines = fid.readlines()
     fid.close()
-    daily_alpha  = {}
+    daily_alpha = {}
     for line in lines:
         segs = line.strip().split(' ')
         if len(segs) < 5:
@@ -27,7 +27,7 @@ def process_date(convert_dir, npzs_path, date_list, filtered_alphas):
     for date in date_list:
         daily_alphas = {}
         print(date)
-        key_search = date.replace('-','')
+        key_search = date.replace('-', '')
         for alpha_index in filtered_alphas:
             filename = alpha_index + '_' + key_search + '_' + key_search + '.txt'
             file_ = os.path.join(convert_dir, alpha_index, filename)

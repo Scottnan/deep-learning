@@ -1,3 +1,5 @@
+import sys
+import os
 import multiprocessing as mp
 import numpy as np
 from .gen_daily_care import *
@@ -58,7 +60,7 @@ def get_period_dates_alphas(period_dates, alpha_npz_dir):
 # get alphas based on date specifed
 def get_alphas(date_alphas, stock):
     alphas = np.zeros((156))
-    sorted_date_alphas = sorted(date_alphas.items(), key=lambda item:item[0])
+    sorted_date_alphas = sorted(date_alphas.items(), key=lambda item: item[0])
     raw_NA, imputed_NA = 0, 0
     for ind, stock_imputed in enumerate(sorted_date_alphas):
         if stock_imputed == 'NA':
